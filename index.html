@@ -3,22 +3,240 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>tobbee</title>
+  <title>Torbjörn Einarsson · tobbee</title>
+  <meta name="description" content="Open-source tools for video streaming by Torbjörn Einarsson: MPEG-DASH, CMAF, live streaming and Media over QUIC.">
+  <meta property="og:title" content="Torbjörn Einarsson · tobbee">
+  <meta property="og:description" content="Open-source tools for video streaming: MPEG-DASH, CMAF, live streaming and Media over QUIC.">
+  <meta property="og:url" content="https://tobbee.github.io/">
+  <meta property="og:type" content="website">
+  <meta name="color-scheme" content="light dark">
   <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; max-width: 40rem; margin: 4rem auto; padding: 0 1rem; line-height: 1.5; color: #222; }
-    h1 { margin-bottom: 0.25rem; }
-    p.lede { color: #666; margin-top: 0; }
-    ul { padding-left: 1.25rem; }
-    a { color: #1a5276; }
+    :root {
+      --bg: #f7f8f9;
+      --surface: #ffffff;
+      --fg: #1c2330;
+      --muted: #5a6474;
+      --border: #e1e5ea;
+      --accent: #007d9c;
+      --accent-soft: #e3f4f8;
+      --tag-bg: #eef1f4;
+      --gopher-bg: #e3f4f8;
+      --shadow: 0 1px 2px rgba(20, 30, 45, .05), 0 4px 16px rgba(20, 30, 45, .05);
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0f141a;
+        --surface: #161d25;
+        --fg: #e6eaef;
+        --muted: #9ba5b3;
+        --border: #263040;
+        --accent: #4fc9e3;
+        --accent-soft: #15303a;
+        --tag-bg: #1f2833;
+        --gopher-bg: #c4e4ec;
+        --shadow: none;
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--fg);
+      font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    main, footer { max-width: 60rem; margin: 0 auto; padding: 0 1.25rem; }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 2rem;
+      align-items: center;
+      padding: 4rem 0 3rem;
+    }
+    .hero h1 { font-size: 2.4rem; line-height: 1.15; margin: 0; letter-spacing: -.02em; }
+    .handle { color: var(--muted); margin: .25rem 0 1.25rem; }
+    .lede { font-size: 1.15rem; margin: 0 0 1.25rem; max-width: 36rem; }
+    .focus { display: flex; flex-wrap: wrap; gap: .5rem; list-style: none; padding: 0; margin: 0 0 1.5rem; }
+    .focus li {
+      background: var(--accent-soft);
+      color: var(--accent);
+      border-radius: 999px;
+      padding: .2rem .8rem;
+      font-size: .875rem;
+      font-weight: 500;
+    }
+    .links { display: flex; flex-wrap: wrap; gap: 1.25rem; font-weight: 500; }
+    .gopher {
+      width: 16rem;
+      margin: 0;
+      padding: 1.25rem;
+      border-radius: 28px;
+      background: var(--gopher-bg);
+    }
+    .gopher img { width: 100%; height: auto; display: block; }
+
+    section { padding: 2rem 0; }
+    section h2 { font-size: 1.4rem; margin: 0 0 .25rem; letter-spacing: -.01em; }
+    .section-intro { color: var(--muted); margin: 0 0 1.5rem; }
+
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: 1rem; }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem 1.25rem 1rem;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      transition: border-color .15s, transform .15s;
+    }
+    .card:hover { border-color: var(--accent); transform: translateY(-2px); }
+    .card h3 { margin: 0 0 .1rem; font-size: 1.15rem; }
+    .card .where { color: var(--muted); font-size: .85rem; margin: 0 0 .6rem; }
+    .card p.desc { margin: 0 0 1rem; font-size: .95rem; }
+    .tags { display: flex; flex-wrap: wrap; gap: .35rem; list-style: none; padding: 0; margin: 0 0 1rem; }
+    .tags li { background: var(--tag-bg); color: var(--muted); border-radius: 6px; padding: .05rem .5rem; font-size: .78rem; }
+    .card .actions { margin-top: auto; display: flex; gap: 1rem; font-size: .9rem; font-weight: 500; }
+    .card .actions .primary::after { content: " \2192"; }
+
+    .projects { list-style: none; padding: 0; margin: 0; border-top: 1px solid var(--border); }
+    .projects li {
+      display: grid;
+      grid-template-columns: 11rem 1fr;
+      gap: 1rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .projects .name { font-weight: 600; font-size: 1.05rem; }
+    .projects .org { display: block; color: var(--muted); font-size: .85rem; font-weight: 400; }
+    .projects p { margin: 0; font-size: .95rem; }
+
+    footer {
+      color: var(--muted);
+      font-size: .85rem;
+      padding-top: 2rem;
+      padding-bottom: 3rem;
+    }
+    footer p { margin: .3rem 0; }
+
+    @media (max-width: 40rem) {
+      .hero { grid-template-columns: 1fr; padding-top: 2.5rem; gap: 1.5rem; }
+      .gopher { width: 11rem; padding: .9rem; order: -1; }
+      .hero h1 { font-size: 2rem; }
+      .projects li { grid-template-columns: 1fr; gap: .25rem; }
+    }
   </style>
 </head>
 <body>
-  <h1>tobbee</h1>
-  <p class="lede">Projects and experiments by Torbj&ouml;rn Einarsson.</p>
-  <ul>
-    <li><a href="/moq-llm-wiki/">MOQ Wiki</a> &mdash; LLM-maintained knowledge base for the Media over QUIC protocol ecosystem.</li>
-    <li><a href="/dashcheck/">dashcheck</a> &mdash; MPEG-DASH conformance checker for MPDs, segments and live timing, in the browser and on the command line.</li>
-    <li><a href="/trebelli-score/">Tre Belli</a> &mdash; Score keeper for the three-player card game Tre Belli, in English and Swedish.</li>
-  </ul>
+  <main>
+    <header class="hero">
+      <div>
+        <h1>Torbjörn Einarsson</h1>
+        <p class="handle">tobbee &middot; Stockholm</p>
+        <p class="lede">I'm a streaming media expert at Eyevinn Technology. I write open-source tools and libraries for
+          video streaming, mostly in Go, and maintain the DASH-IF live source simulator.</p>
+        <ul class="focus" aria-label="Focus areas">
+          <li>MPEG-DASH</li>
+          <li>CMAF / fMP4</li>
+          <li>Live streaming</li>
+          <li>Media over QUIC</li>
+          <li>Go</li>
+        </ul>
+        <div class="links">
+          <a href="https://github.com/tobbee">GitHub</a>
+          <a href="https://github.com/Eyevinn">Eyevinn on GitHub</a>
+          <a href="https://www.eyevinntechnology.se/">Eyevinn Technology</a>
+        </div>
+      </div>
+      <figure class="gopher">
+        <img src="images/gopher-coding.svg" alt="A Go gopher typing on a laptop at a desk" width="600" height="600">
+      </figure>
+    </header>
+
+    <section aria-labelledby="pages">
+      <h2 id="pages">On this site</h2>
+      <p class="section-intro">Tools that run in your browser, each published with GitHub Pages from its own repository.</p>
+      <div class="cards">
+        <article class="card">
+          <h3><a href="/dashcheck/">dashcheck</a></h3>
+          <p class="where">tobbee.github.io/dashcheck</p>
+          <p class="desc">MPEG-DASH conformance checker. Validates the MPD against the schema and the DASH-IF, DVB, HbbTV,
+            CMAF and CTA WAVE rules, parses the segments, and checks live timing against a synchronized clock. The same Go
+            code runs on the command line and, compiled to WebAssembly, in your browser.</p>
+          <ul class="tags"><li>Go</li><li>WebAssembly</li><li>MPEG-DASH</li></ul>
+          <div class="actions">
+            <a class="primary" href="/dashcheck/">Check a stream</a>
+            <a href="https://github.com/tobbee/dashcheck">Source</a>
+          </div>
+        </article>
+        <article class="card">
+          <h3><a href="/moq-llm-wiki/">MOQ Wiki</a></h3>
+          <p class="where">tobbee.github.io/moq-llm-wiki</p>
+          <p class="desc">Knowledge base on the Media over QUIC ecosystem: IETF drafts, protocol concepts, implementations
+            and interop. An LLM maintains it from the drafts, GitHub activity and Slack discussions.</p>
+          <ul class="tags"><li>Media over QUIC</li><li>IETF</li><li>Claude Code</li><li>Quartz</li></ul>
+          <div class="actions">
+            <a class="primary" href="/moq-llm-wiki/">Browse the wiki</a>
+            <a href="https://github.com/tobbee/moq-llm-wiki">Source</a>
+          </div>
+        </article>
+        <article class="card">
+          <h3><a href="/trebelli-score/">Tre Belli</a></h3>
+          <p class="where">tobbee.github.io/trebelli-score</p>
+          <p class="desc">Score keeper for the three-player card game Tre Belli. Walks through all 18 rounds with a running
+            scoreboard, works on phones and remembers the game between visits. In English and Swedish.</p>
+          <ul class="tags"><li>JavaScript</li><li>Card game</li></ul>
+          <div class="actions">
+            <a class="primary" href="/trebelli-score/">Keep score</a>
+            <a href="https://github.com/tobbee/trebelli-score">Source</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section aria-labelledby="work">
+      <h2 id="work">Open-source work</h2>
+      <p class="section-intro">Libraries and services I write and maintain, at Eyevinn and DASH-IF.</p>
+      <ul class="projects">
+        <li>
+          <a class="name" href="https://github.com/Eyevinn/mp4ff">mp4ff<span class="org">Eyevinn</span></a>
+          <p>Go library and command-line tools for MP4 files, focused on fragmented MP4 as used in DASH, HLS and CMAF.
+            Parses and writes boxes for video, audio, subtitles and metadata, and encrypts and decrypts with cenc and cbcs.</p>
+        </li>
+        <li>
+          <a class="name" href="https://github.com/Dash-Industry-Forum/livesim2">livesim2<span class="org">DASH-IF</span></a>
+          <p>DASH live source simulator. Loops VoD assets into endless live streams synchronized to wall-clock time, for
+            testing players with low latency, subtitles, multiple periods and more. Public instance at
+            <a href="https://livesim2.dashif.org/">livesim2.dashif.org</a>.</p>
+        </li>
+        <li>
+          <a class="name" href="https://github.com/Eyevinn/dash-mpd">dash-mpd<span class="org">Eyevinn</span></a>
+          <p>Go library for MPEG-DASH manifests, based on the XML schema so that every element and attribute is covered.</p>
+        </li>
+        <li>
+          <a class="name" href="https://github.com/Eyevinn/moqlivemock">moqlivemock<span class="org">Eyevinn</span></a>
+          <p>Media over QUIC test publisher with wall-clock synchronized video, audio and subtitle tracks, plus a
+            subscriber that can pipe the stream to ffplay.</p>
+        </li>
+        <li>
+          <a class="name" href="https://github.com/Eyevinn/hi264">hi264<span class="org">Eyevinn</span></a>
+          <p>Pure Go H.264/AVC IDR decoder and bitstream generator, for example to extend fMP4 fragments to a target
+            duration.</p>
+        </li>
+      </ul>
+    </section>
+  </main>
+
+  <footer>
+    <p>Gopher illustration by Maria Letta from the
+      <a href="https://github.com/MariaLetta/free-gophers-pack">Free Gophers Pack</a>
+      (<a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0 1.0</a>).
+      The Go gopher was designed by <a href="https://reneefrench.blogspot.com/">Renée French</a> and is licensed under
+      <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</p>
+    <p><a href="https://github.com/tobbee/tobbee.github.io">Source of this page</a></p>
+  </footer>
 </body>
 </html>
